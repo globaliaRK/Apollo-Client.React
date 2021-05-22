@@ -25,13 +25,13 @@ const Login = () => {
         const token = localStorage.getItem('Token');
         if (token) {
             const { exp } = jwtDecode(localStorage.getItem('Token'));
-            if (!(exp >= Date.now())) history.push('/home')
+            if (!(exp >= Date.now())) history.push('/')
         }
     }, [])
     useEffect(() => {
         if (Token) {
             window.localStorage.setItem('Token', Token.Token)
-            history.push('/home')
+            history.push('/')
         }
     }, [Token])
 

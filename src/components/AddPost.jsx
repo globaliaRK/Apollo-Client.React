@@ -1,58 +1,73 @@
 import { gql, useMutation } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { toast, ToastContainer } from 'react-toastify';
 
 const AddPost = () => {
 
     const history = useHistory();
-    const [postTitle, setPostTitle] = useState();
-    const [postMessage, setPostMessage] = useState();
-    const [postImg, setPostImg] = useState();
-    const [Data, setData] = useState();
-    const [Error, setError] = useState();
-    const [Token, setToken] = useState();
-    const [addPost] = useMutation(ADDPOST, { variables: { postImg, postTitle, postMessage } });
+    const [postDetail, setPostDetail] = useState({ postTitle: null, postMessage: null, postImg: null });
+
+    const [addPost, { data, loading, error }] = useMutation(ADDPOST, { variables: { ...postDetail } });
 
     const onclick = async () => {
-        try {
-            const { data, loading } = await addPost()
-            setData(data);
-        } catch (err) {
-            setError(err);
+        const { postTitle, postMessage, postImg } = postDetail;
+        if (!postTitle) {
+            toast.error("postTitle cann't empty", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+            });
+        } else if (!postMessage) {
+            console.log({ postTitle, postMessage, postImg });
+            toast.error("postMessage cann't empty", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+            });
+        } else if (!postImg || !postImg.match(/\.(jpe?g|png)$/i)) {
+            toast.error("postImg cann't empty or not a image file.", {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: true,
+            });
+        } else {
+            try {
+                await addPost();
+            } catch (err) {
+                toast.error('Post Title already userd.', {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                });
+            }
         }
     }
 
-    useEffect(() => { history.push('/home') }, [Data])
+    useEffect(() => { console.log(data) }, [data])
 
     return (
-        <>
+        <Fragment>
             <div className='py-5' style={{ textAlign: "center" }}>
                 <h1>Add Your Post</h1>
             </div>
             <form className="col-8 mx-auto">
-                {Error && <div class="col-8 mx-auto alert alert-danger" role="alert">{Error.message.toString()}</div>}
                 <div class="form-group">
                     <label for="postTitle">Post Title</label>
-                    <input type="text" value={postTitle} onChange={({ target }) => setPostTitle(target.value)} class="form-control" id="postTitle" />
+                    <input type="text" name="postTitle" value={postDetail.postTitle} onChange={({ target }) => setPostDetail({ ...postDetail, [target.name]: target.value })} class="form-control" id="postTitle" />
                 </div>
                 <div class="form-group">
                     <label for="postMessage">Post Message</label>
-                    <input type="text" value={postMessage} onChange={({ target }) => setPostMessage(target.value)} class="form-control" id="postMessage" />
+                    <input type="text" name="postMessage" value={postDetail.postMessage} onChange={({ target }) => setPostDetail({ ...postDetail, [target.name]: target.value })} class="form-control" id="postMessage" />
                 </div>
                 <div class="form-group">
                     <label for="postImg">Post Img</label>
-                    <input type="text" value={postImg} onChange={({ target }) => setPostImg(target.value)} class="form-control" id="postImg" />
+                    <input type="text" name="postImg" value={postDetail.postImg} onChange={({ target }) => setPostDetail({ ...postDetail, [target.name]: target.value })} class="form-control" id="postImg" />
                 </div>
-                <button type="button" onClick={onclick} class="btn btn-primary">{
-                    // loading ?
-                    //     <div class="spinner-border text-light" role="status">
-                    //         <span class="visually-hidden"></span>
-                    //     </div>
-                    //     : 
-                    'Add Post'
-                }</button>
+                <button type="button" onClick={onclick} class="btn btn-primary">Add Post</button>
             </form>
-        </>
+            <ToastContainer />
+        </Fragment>
     );
 };
 

@@ -9,7 +9,7 @@ const NavBar = () => {
             <div class="mx-5 collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ml-auto">
                     <li class="p-2 nav-item active">
-                        <Link class="nav-link" to="/home">Home</Link>
+                        <Link class="nav-link" to="/">Home</Link>
                     </li>
                     <li class="p-2 nav-item active">
                         <Link class="nav-link" to="/addPost">addPost</Link>

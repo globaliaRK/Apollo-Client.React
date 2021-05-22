@@ -11,7 +11,9 @@ const Home = () => {
 
     return (
         <div>
-            {loading && <div className="spinner-border text-light" role="status"><span className="visually-hidden"></span></div>}
+            {loading && <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden"></span>
+            </div>}
             {data && <div className='col-8 mx-auto row p-3'>
                 {data.Post.map(({ postTitle, postMessage, postImg, postComment }) => {
                     return (<div className="card m-3" style={{ width: '18rem' }}>

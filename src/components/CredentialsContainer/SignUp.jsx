@@ -16,7 +16,7 @@ const SignUp = () => {
         const token = localStorage.getItem('Token');
         if (token) {
             const { exp } = jwtDecode(localStorage.getItem('Token'));
-            if (!(exp >= Date.now())) history.push('/home')
+            if (!(exp >= Date.now())) history.push('/')
         }
     }, [])
 
@@ -41,7 +41,7 @@ const SignUp = () => {
     useEffect(() => {
         if (Token) {
             window.localStorage.setItem('Token', Token)
-            history.push('/home')
+            history.push('/')
         }
     }, [Token])
 
@@ -75,7 +75,11 @@ const SignUp = () => {
             try {
                 await setUserQL();
             } catch (e) {
-                console.log(e);
+                toast.error(e.message, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: true,
+                })
             }
         }
     }
