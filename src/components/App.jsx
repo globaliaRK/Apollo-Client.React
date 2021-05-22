@@ -40,18 +40,20 @@ const accessRoutes = [
 const App = () => {
 
     const [isLoging, setLogin] = useState(localStorage.getItem('login'));
-    console.log(isLoging);
+
     return (
         <div className="col-8 mx-auto ">
             <Router>
-                <NavBar />
                 <Switch>
-                    {!isLoging && <Route {...logRoutes[0]} /> || <Route {...accessRoutes[0]} />}
-                    {!isLoging && <Route {...logRoutes[1]} /> || <Route {...accessRoutes[0]} />}
-                    {isLoging && <Route {...accessRoutes[1]} /> || <Route {...logRoutes[0]} />}
-                    {isLoging && <Route {...accessRoutes[2]} /> || <Route {...logRoutes[0]} />}
-                    {isLoging && <Route {...accessRoutes[3]} /> || <Route {...logRoutes[0]} />}
-                    <Redirect exact to="/home" from="/*" />
+                    <Route path="/login" exact component={Login} />
+                    <Route path="/signup" exact component={SignUp} />
+                    <div>
+                        <NavBar />
+                        <Route path="/home" exact component={Home} />
+                        <Route path="/addPost" exact component={Login} />
+                        <Route path="/dcs" exact component={Home} />
+                    </div>
+                    {/* <Redirect exact to="/home" from="/*" /> */}
                 </Switch>
             </Router>
         </div>

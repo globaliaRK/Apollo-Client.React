@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { gql, useLazyQuery } from '@apollo/client';
 import { useHistory } from 'react-router';
-
-
+import jwtDecode from 'jwt-decode';
 
 const Login = () => {
 
@@ -11,13 +10,6 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [Token, setToken] = useState('');
     const [getToken, { loading, error, data }] = useLazyQuery(EXCHANGE_RATES, { variables: { email, password } });
-
-    useEffect(() => {
-        const token = window.localStorage.getItem('Token')
-        if (token) {
-            history.push('/home');
-        }
-    }, [])
 
     const OnClick = (e) => {
         e.preventDefault()
@@ -29,7 +21,13 @@ const Login = () => {
             }
         }
     }
-
+    useEffect(() => {
+        const token = localStorage.getItem('Token');
+        if (token) {
+            const { exp } = jwtDecode(localStorage.getItem('Token'));
+            if (!(exp >= Date.now())) history.push('/home')
+        }
+    }, [])
     useEffect(() => {
         if (Token) {
             window.localStorage.setItem('Token', Token.Token)
@@ -51,13 +49,16 @@ const Login = () => {
                     <label for="exampleInputPassword1">Password</label>
                     <input type="password" class="form-control" value={password} onChange={({ target }) => setPassword(target.value)} name="email" />
                 </div>
-                <button onClick={OnClick} type="button" class="btn btn-primary">{
-                    loading ?
-                        <div class="spinner-border text-light" role="status">
-                            <span class="visually-hidden"></span>
-                        </div>
-                        : 'Submit'
-                }</button>
+                <div className="d-flex justify-content-between">
+                    <button onClick={OnClick} type="button" class="btn btn-primary">{
+                        loading ?
+                            <div class="spinner-border text-light" role="status">
+                                <span class="visually-hidden"></span>
+                            </div>
+                            : 'Submit'
+                    }</button>
+                    <button type="button" onClick={() => history.push('/signup')} className="btn btn-primary">Sign Up</button>
+                </div>
             </form>
         </>
     );

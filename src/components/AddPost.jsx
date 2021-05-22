@@ -13,13 +13,6 @@ const AddPost = () => {
     const [Token, setToken] = useState();
     const [addPost] = useMutation(ADDPOST, { variables: { postImg, postTitle, postMessage } });
 
-    useEffect(() => {
-        const token = window.localStorage.getItem('Token')
-        if (!token) {
-            history.push('/login');
-        } else setToken(token)
-    }, [])
-
     const onclick = async () => {
         try {
             const { data, loading } = await addPost()

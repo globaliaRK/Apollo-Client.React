@@ -7,12 +7,7 @@ const Home = () => {
     const history = useHistory();
     const [Token, setToken] = useState();
     const { loading, data, error } = useQuery(getAllPost);
-    useEffect(() => {
-        const token = window.localStorage.getItem('Token')
-        if (!token) {
-            history.push('/login');
-        } else setToken(token)
-    }, [])
+
 
     return (
         <div>
